@@ -11,12 +11,12 @@ int binsearch2(const vector<int>& arr, int low, int high, int key) {
     Count++;
 
     if (low > high)
-        return -1; // 값을 찾지 못했을 때 -1 반환
+        return 0; // 값을 찾지 못했을 때 -1 반환
 
     int mid = (low + high) / 2;
 
     if (key == arr[mid])
-        return mid;
+        return mid+1;
     else if (key < arr[mid])
         return binsearch2(arr, low, mid - 1, key);
     else
