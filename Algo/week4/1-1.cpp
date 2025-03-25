@@ -1,5 +1,4 @@
 
-
 #include <iostream>
 #include <vector>
 #include <algorithm>
@@ -7,9 +6,9 @@ using namespace std;
 
 typedef vector<vector<int>> Matrix;
 
-int threshold = 0;
-
+int threshold = 1; // Set threshold to at least 1
 int cnt = 0;
+
 // Basic matrix multiplication for small matrices
 void mmult(int n, const Matrix& A, const Matrix& B, Matrix& C) {
     for (int i = 0; i < n; i++) {
@@ -55,7 +54,6 @@ void partition(int m, const Matrix& A, Matrix& a11, Matrix& a12, Matrix& a21, Ma
     }
 }
 
-
 void combine(int m, Matrix& C, const Matrix& c11, const Matrix& c12, const Matrix& c21, const Matrix& c22) {
     for (int i = 0; i < m; i++) {
         for (int j = 0; j < m; j++) {
@@ -67,11 +65,10 @@ void combine(int m, Matrix& C, const Matrix& c11, const Matrix& c12, const Matri
     }
 }
 
-
-void strassen(int n , Matrix A ,Matrix B , Matrix& C){
+void strassen(int n, Matrix A, Matrix B, Matrix& C) {
     cnt++;
-    if(n<= threshold){
-        mmult(n , A , B , C);  
+    if (n <= threshold) {
+        mmult(n, A, B, C); // Actually call mmult for base case
     }
     else {
         int m = n/2;
@@ -89,8 +86,9 @@ void strassen(int n , Matrix A ,Matrix B , Matrix& C){
         Matrix C21(m, vector<int>(m));
         Matrix C22(m, vector<int>(m));
 
-        partition(m , A , A11, A12, A21, A22);
-        partition(m , B , B11, B12, B21, B22);
+        partition(m, A, A11, A12, A21, A22);
+        partition(m, B, B11, B12, B21, B22);
+        
         Matrix M1(m, vector<int>(m));
         Matrix M2(m, vector<int>(m));
         Matrix M3(m, vector<int>(m));
@@ -152,76 +150,42 @@ void strassen(int n , Matrix A ,Matrix B , Matrix& C){
         temp2 = add(m, temp1, M3);
         C22 = add(m, temp2, M6);
 
-
-
         combine(m, C, C11, C12, C21, C22);
     }
-    
 }
 
-
-
-int main(){
-    int n , k;
+int main() {
+    int n, k;
     cin >> n >> k;
-
-    threshold = k;
+    
+    threshold = k; // Set threshold to k
     
     Matrix A(n, vector<int>(n));
     Matrix B(n, vector<int>(n));
     Matrix C(n, vector<int>(n));
-    for (int i = 0; i < n; i++)
-    {
-        for (int j = 0; j < n; j++)
-        {
+    
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
             cin >> A[i][j];
         }
     }
-    for (int i = 0; i < n; i++)
-    {
-        for (int j = 0; j < n; j++)
-        {
+    
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
             cin >> B[i][j];
         }
     }
 
-    strassen(n ,  A , B , C);
+    strassen(n, A, B, C);
 
     cout << cnt << endl;
 
-    for (int i = 0; i < n; i++)
-    {
-        for (int j = 0; j < n; j++)
-        {
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
             cout << C[i][j] << " ";
         }
         cout << endl;
-        
     }
     
-    
     return 0;
-    
-
-
-    
-
-    // for (int i = 0; i < n; i++)
-    // {
-    //     for (int j = 0; j < n; j++)
-    //     {
-    //         cout << A[i][j] << " ";
-    //     }
-    //     cout << endl;
-    // }
-    // for (int i = 0; i < n; i++)
-    // {
-    //     for (int j = 0; j < n; j++)
-    //     {
-    //         cout << B[i][j] << " ";
-    //     }
-    //     cout << endl;
-    // }
-    
-    
 }
