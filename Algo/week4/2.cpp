@@ -96,7 +96,7 @@ void prod(LargeInteger u, LargeInteger v, LargeInteger &r) {
     int n = max(u.size(), v.size());
     if (u.size() == 0 || v.size() == 0) // LargeInteger 하나라도 0이라면 r은 0으로 초기화해준다.
         r.resize(0);
-    else if (n <= n)
+    else if (n <= ::n)
         lmult(u, v, r);
     else {
         int m = n / 2; 
@@ -126,10 +126,11 @@ int main(){
 
     cout << cnt << endl;;
 
-    cout << r[0];
-    for(int i = 1; i< r.size(); i++){
-        cout << " " << r[i];
-    }
+    cout << r[r.size()];
+    // 큰 숫자를 올바르게 출력
+    for(int i = r.size() - 1; i >= 0; i--) {
+        cout << r[i];
+}
     
 
     
