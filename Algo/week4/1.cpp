@@ -6,7 +6,7 @@ using namespace std;
 
 typedef vector<vector<int>> Matrix;
 
-int threshold = 1;
+int n = 1;
 int cnt = 0;
 
 void mmult(int n, const Matrix& A, const Matrix& B, Matrix& C) {
@@ -84,7 +84,7 @@ int nextPowerOfTwo(int n) {
 void strassenAlgorithm(int n, const Matrix& A, const Matrix& B, Matrix& C) {
     cnt++;
     
-    if (n <= threshold) {
+    if (n <= n) {
         mmult(n, A, B, C);
         return;
     }
@@ -180,7 +180,7 @@ int main() {
     int n, k;
     cin >> n >> k;
     
-    threshold = k;
+    n = k;
     
     Matrix A(n, vector<int>(n));
     Matrix B(n, vector<int>(n));
