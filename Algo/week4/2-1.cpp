@@ -9,10 +9,21 @@ int cnt = 0;
 
 int n;
 
+LargeInteger intToLargeInteger(int num) {
+    if (num == 0) return {0};
+    
+    LargeInteger result;
+    while (num > 0) {
+        result.push_back(num % 10);
+        num /= 10;
+    }
+    return result;
+}
+
 void lmult(LargeInteger u, LargeInteger v, LargeInteger &r) {
     int n = u.size();
     int m = v.size();
-    r.resize(n + m, 0);  // Initialize with zeros
+    r.resize(n + m, 0);
     
     for (int i = 0; i < n; i++) {
         int carry = 0;
@@ -26,50 +37,41 @@ void lmult(LargeInteger u, LargeInteger v, LargeInteger &r) {
         }
     }
     
-    // Remove leading zeros
     while (r.size() > 1 && r.back() == 0) {
         r.pop_back();
     }
-    
-    cnt++;  // Increment operation counter
 }
-void pow_by_exp(LargeInteger u, int m , LargeInteger &r){
+
+void pow_by_exp(LargeInteger u, int m, LargeInteger &r) {
     r = u;
-    r.insert(r.begin(), m ,0);
-    cnt++;
+    r.insert(r.begin(), m, 0);
 }
 
 void div_by_exp(LargeInteger u, int m, LargeInteger &r) {
     if (u.size() <= m) {
-        // If we're removing more digits than exist, result is 0
-        r.resize(0);
+        r.resize(1, 0);
     } else {
-        // Copy all digits except the m least significant ones
         r.resize(u.size() - m);
         for (int i = 0; i < r.size(); i++) {
             r[i] = u[i + m];
         }
     }
-    cnt++;  // Increment operation counter
 }
 
 void rem_by_exp(LargeInteger u, int m, LargeInteger &r) {
     if (u.size() <= m) {
-        // If number has fewer than m digits, it is its own remainder
         r = u;
     } else {
-        // Take only the m least significant digits
         r.resize(m);
         for (int i = 0; i < m; i++) {
             r[i] = u[i];
         }
     }
-    cnt++;  // Increment operation counter
 }
 
 void ladd(LargeInteger u, LargeInteger v, LargeInteger &r) {
     int n = max(u.size(), v.size());
-    r.resize(n + 1);  // Extra space for potential carry
+    r.resize(n + 1, 0);
     
     int carry = 0;
     for (int i = 0; i < n; i++) {
@@ -84,54 +86,50 @@ void ladd(LargeInteger u, LargeInteger v, LargeInteger &r) {
     if (carry > 0) {
         r[n] = carry;
     } else {
-        r.resize(n);  
+        r.resize(n);
     }
-    
-    cnt++; 
 } 
+
 void prod(LargeInteger u, LargeInteger v, LargeInteger &r) {
     cnt++;
     LargeInteger x, y, w, z;
     LargeInteger t1, t2, t3, t4, t5, t6, t7, t8;
     int n = max(u.size(), v.size());
-    if (u.size() == 0 || v.size() == 0) // LargeInteger 하나라도 0이라면 r은 0으로 초기화해준다.
-        r.resize(0);
-    else if (n <= ::n)
+    
+    if (u.size() == 0 || v.size() == 0) {
+        r.resize(1, 0);
+        return;
+    } else if (n <= ::n) {
         lmult(u, v, r);
-    else {
+    } else {
         int m = n / 2; 
         div_by_exp(u, m, x); rem_by_exp(u, m, y);
         div_by_exp(v, m, w); rem_by_exp(v, m, z);
-        // t2 <- prod(x,w) * 10^(2*m)
         prod(x, w, t1); pow_by_exp(t1, 2 * m, t2);
-        // t6 <- (prod(x,z)+prod(w,y)) * 10^m
         prod(x, z, t3); prod(w, y, t4); ladd(t3, t4, t5); pow_by_exp(t5, m, t6);
-        // r <- t2 + t6 + prod(y, z)
         prod(y, z, t7); ladd(t2, t6, t8); ladd(t8, t7, r);
     }
 }
 
-int main(){
-    int a, b ;
-
+int main() {
+    int a, b;
     
     cin >> n;
-    cin >> a;
-    cin >> b;
+    cin >> a >> b;
     
-    LargeInteger u(a), v(b), r; // a개의 0으로 초기화됨, r은 초기화 하지 않은 상태 
+    LargeInteger u = intToLargeInteger(a);
+    LargeInteger v = intToLargeInteger(b);
+    LargeInteger r;
 
+    prod(u, v, r);
 
-    prod(u, v, r); 
-
-    cout << cnt << endl;;
+    cout << cnt << endl;
 
     cout << r[r.size()-1];
-    // 큰 숫자를 올바르게 출력
-    for(int i = r.size() - 2; i >= 0; i--) {
+    for (int i = r.size() - 2; i >= 0; i--) {
         cout << r[i];
-}
+    }
+    cout << endl;
     
-
-    
+    return 0;
 }
