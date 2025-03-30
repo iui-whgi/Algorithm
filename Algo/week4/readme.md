@@ -26,7 +26,7 @@
 이걸 넣어버림 그래서 for문 도는동안 또 !=안맞으면 계속 돌게됨
 
 
-[5_90%내가](./5_90%bymyself.cpp)  
+[5_90%내가](https://github.com/iui-whgi/Algorithm/blob/main/Algo/week4/5_90%25%EB%82%B4%EA%B0%80%ED%92%88.cpp)
 
 4번과 유사한 문제이지만 잘풀다가 합쳐주는걸 안했음음
 
