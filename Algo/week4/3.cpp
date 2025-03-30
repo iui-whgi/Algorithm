@@ -16,7 +16,7 @@ void Mmult(Matrix A, Matrix B, Matrix &r){
     
 }
 
-# 이게 내가 풀던 오리지날
+
 
 int fibo(int n){
     Matrix start(2 , vector<int>(1,0));
