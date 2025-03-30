@@ -1,137 +1,189 @@
 #include <iostream>
 #include <vector>
-#include <algorithm>
 #include <string>
-
 using namespace std;
+
+int cnt=0;
+int threshold;
+
 typedef vector<int> LargeInteger;
-int cnt = 0;
 
-int n;
-
-void lmult(LargeInteger u, LargeInteger v, LargeInteger &r) {
-    int n = u.size();
-    int m = v.size();
-    r.resize(n + m, 0);  // Initialize with zeros
-    
-    for (int i = 0; i < n; i++) {
-        int carry = 0;
-        for (int j = 0; j < m; j++) {
-            int prod = r[i + j] + u[i] * v[j] + carry;
-            r[i + j] = prod % 10;
-            carry = prod / 10;
-        }
-        if (carry > 0) {
-            r[i + m] += carry;
-        }
+LargeInteger stringToLargeInteger(const string& s) {
+    LargeInteger result;
+    for (int i = s.length() - 1; i >= 0; i--) {
+        result.push_back(s[i] - '0');
     }
-    
-    // Remove leading zeros
-    while (r.size() > 1 && r.back() == 0) {
-        r.pop_back();
+    // 빈 벡터는 0을 나타내도록 함
+    if (result.empty()) {
+        result.push_back(0);
     }
-    
-    cnt++;  // Increment operation counter
-}
-void pow_by_exp(LargeInteger u, int m , LargeInteger &r){
-    r = u;
-    r.insert(r.begin(), m ,0);
-    cnt++;
+    return result;
 }
 
-void div_by_exp(LargeInteger u, int m, LargeInteger &r) {
-    if (u.size() <= m) {
-        // If we're removing more digits than exist, result is 0
-        r.resize(0);
-    } else {
-        // Copy all digits except the m least significant ones
-        r.resize(u.size() - m);
-        for (int i = 0; i < r.size(); i++) {
-            r[i] = u[i + m];
-        }
-    }
-    cnt++;  // Increment operation counter
-}
 
-void rem_by_exp(LargeInteger u, int m, LargeInteger &r) {
-    if (u.size() <= m) {
-        // If number has fewer than m digits, it is its own remainder
-        r = u;
-    } else {
-        // Take only the m least significant digits
-        r.resize(m);
-        for (int i = 0; i < m; i++) {
-            r[i] = u[i];
-        }
-    }
-    cnt++;  // Increment operation counter
-}
 
-void ladd(LargeInteger u, LargeInteger v, LargeInteger &r) {
-    int n = max(u.size(), v.size());
-    r.resize(n + 1);  // Extra space for potential carry
-    
+void cArry(LargeInteger &v)
+{
+
     int carry = 0;
-    for (int i = 0; i < n; i++) {
-        int sum = carry;
-        if (i < u.size()) sum += u[i];
-        if (i < v.size()) sum += v[i];
-        
-        r[i] = sum % 10;
-        carry = sum / 10;
+    for (int i = 0; i < v.size(); i++)
+    {
+        v[i] += carry;
+        carry = v[i] / 10;
+        v[i] = v[i] % 10;
     }
-    
-    if (carry > 0) {
-        r[n] = carry;
-    } else {
-        r.resize(n);  
+    if (carry != 0)
+        v.push_back(carry);
+}
+
+void Add(LargeInteger &a, LargeInteger &b, LargeInteger &c)
+{
+    int len = a.size() > b.size() ? a.size() : b.size();
+    c.resize(len);
+    for (int i = 0; i < len; i++)
+    {
+        if (i < a.size())
+            c[i] += a[i];
+        if (i < b.size())
+            c[i] += b[i];
     }
-    
-    cnt++; 
-} 
-void prod(LargeInteger u, LargeInteger v, LargeInteger &r) {
-    cnt++;
-    LargeInteger x, y, w, z;
-    LargeInteger t1, t2, t3, t4, t5, t6, t7, t8;
-    int n = max(u.size(), v.size());
-    if (u.size() == 0 || v.size() == 0) // LargeInteger 하나라도 0이라면 r은 0으로 초기화해준다.
-        r.resize(0);
-    else if (n <= ::n)
-        lmult(u, v, r);
+    cArry(c);
+}
+
+void reMove(LargeInteger &v)
+{
+    while (true)
+    {
+        if (v.size() != 0 && v.back() == 0)
+            v.pop_back();
+        else
+            return;
+    }
+}
+
+void roundup(LargeInteger &v)
+{
+
+    int borrow = 0;
+    for (int i = 0; i < v.size(); i++)
+    {
+        v[i] -= borrow;
+        borrow = 0;
+        if (v[i] < 0)
+        {
+            v[i] += 10;
+            borrow = 1;
+        }
+    }
+
+    reMove(v);
+}
+
+void lsub(LargeInteger &a, LargeInteger &b, LargeInteger &c)
+{
+
+    int len = a.size() > b.size() ? a.size() : b.size();
+    c.resize(len);
+    for (int i = 0; i < len; i++)
+    {
+        if (i < a.size())
+            c[i] += a[i];
+        if (i < b.size())
+            c[i] -= b[i];
+    }
+    roundup(c);
+}
+
+void lmult(LargeInteger &a, LargeInteger &b, LargeInteger &c)
+{   
+    c.resize(a.size() + b.size() - 1); 
+    for(int i=0; i<c.size(); i++) c[i] = 0;
+    for (int i = 0; i < a.size(); i++)
+        for (int j = 0; j < b.size(); j++)
+            c[i + j] += a[i] * b[j];
+    cArry(c);
+}
+
+void print(LargeInteger &v)
+{
+    for (int i = v.size() - 1; i >= 0; i--)
+    {
+        cout << v[i];
+      
+    }
+}
+
+void div_by_exp(LargeInteger& a, int exp, LargeInteger& c){
+    for(int i=exp; i<a.size(); i++)
+        c.push_back(a[i]);
+}
+
+void rem_by_exp(LargeInteger& a, int exp, LargeInteger& c){
+    if(a.size() == 0){
+        c.resize(0);
+    }
     else {
-        int m = n / 2; 
-        div_by_exp(u, m, x); rem_by_exp(u, m, y);
-        div_by_exp(v, m, w); rem_by_exp(v, m, z);
-        // t2 <- prod(x,w) * 10^(2*m)
-        prod(x, w, t1); pow_by_exp(t1, 2 * m, t2);
-        // t6 <- (prod(x,z)+prod(w,y)) * 10^m
-        prod(x, z, t3); prod(w, y, t4); ladd(t3, t4, t5); pow_by_exp(t5, m, t6);
-        // r <- t2 + t6 + prod(y, z)
-        prod(y, z, t7); ladd(t2, t6, t8); ladd(t8, t7, r);
+        for(int i=0; i < exp && i < a.size(); i++)
+            c.push_back(a[i]);
+        reMove(c);
     }
 }
 
-int main(){
-    int a, b ;
-
-    
-    cin >> n;
-    cin >> a;
-    cin >> b;
-    
-    LargeInteger u(a), v(b), r; // a개의 0으로 초기화됨, r은 초기화 하지 않은 상태 
-
-
-    prod(u, v, r); 
-
-    cout << cnt << endl;;
-
-    cout << r[r.size()-1];
-    // 큰 숫자를 올바르게 출력
-    for(int i = r.size() - 2; i >= 0; i--) {
-        cout << r[i];
+void mul_by_exp(LargeInteger& a, int exp, LargeInteger& c){
+    if(a.size() == 0){
+        c.resize(0);
+    } else {
+        c.resize(a.size() + exp);
+        fill(c.begin(), c.end(), 0);
+        copy(a.begin(), a.end(), c.begin() + exp);
+    }
 }
-    
 
+LargeInteger prod(LargeInteger& a, LargeInteger& b){
+
+    cnt++;
+    int m = a.size() > b.size() ? a.size() : b.size();
+    int n = m / 2;
+
+    LargeInteger x1, x2, y1, y2;
+    LargeInteger t1, t2, t3, t4, t5, t6, t7, t8, r;
+
+    if(a.size() == 0 || b.size() == 0){
+        r.resize(0);
+    }
+    else if(m <= threshold){
+        lmult(a, b, r);
+    }
+    else {
+        div_by_exp(a, n, x1);
+        rem_by_exp(a, n, x2);
+        div_by_exp(b, n, y1);
+        rem_by_exp(b, n, y2);
+
+        t1 = prod(x1, y1); mul_by_exp(t1, n * 2, t2);  
+        t3 = prod(x1, y2); t4 = prod(x2, y1); Add(t3, t4, t5); mul_by_exp(t5, n, t6); 
+        t7 = prod(x2, y2);  //t7
+        Add(t2, t6, t8);
+        Add(t8, t7, r);
+    }
+    return r;
+}
+
+
+int main()
+{
+    string a_str, b_str;
     
+    cin >> threshold;
+    cin >> a_str >> b_str;
+    
+    
+    LargeInteger u = stringToLargeInteger(a_str);
+    LargeInteger v = stringToLargeInteger(b_str);
+    LargeInteger r;
+
+    r = prod(u ,v);
+    cout << cnt << "\n";
+    print(r);
+    return 0;
 }

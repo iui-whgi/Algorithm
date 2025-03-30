@@ -6,7 +6,7 @@ using namespace std;
 
 typedef vector<vector<int>> Matrix;
 
-int n = 1;
+int threshold = 1;
 int cnt = 0;
 
 void mmult(int n, const Matrix& A, const Matrix& B, Matrix& C) {
