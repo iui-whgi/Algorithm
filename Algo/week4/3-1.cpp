@@ -1,8 +1,12 @@
+// 이게 정답임임
+
+
 #include <iostream>
 #include <vector>
 #include <unordered_map>
 
 using namespace std;
+
 
 const int MOD = 10007;
 
