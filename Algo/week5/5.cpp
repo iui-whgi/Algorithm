@@ -22,7 +22,7 @@ void ValueandPath(vector<vector<int>>& triangle, int a, vector<int>& path, int& 
     path[0] = triangle[0][0];
     
     for (int i = 0; i < a-1; i++) {
-        if (dp[i+1][j+1] >= dp[i+1][j]) {  // ! 여기서 =하나로 갈리게됨
+        if (dp[i+1][j+1] >= dp[i+1][j]) {
             j = j + 1;
         }
         path[i+1] = triangle[i+1][j];
@@ -44,7 +44,7 @@ int main() {
         vector<vector<int>> triangle(a);
         for (int i = 0; i < a; i++) {
             triangle[i].resize(i + 1);
-            for (int j = 0; j <= i; j++) {
+            for (int j = 0; j <= i; j++) {   // ! 여기서 갈림
                 cin >> triangle[i][j];
             }
         }
