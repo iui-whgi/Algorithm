@@ -23,7 +23,7 @@ longInteger bin2(int n , int k){
         for (int j = min(i,k); j > 0; j--)
         {
             
-            B[j] = (B[j] + B[j-1])%10007;
+        B[j] = (B[j] + B[j-1])%10007;
                 
         }
         
