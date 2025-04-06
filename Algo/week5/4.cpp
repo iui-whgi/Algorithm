@@ -6,22 +6,25 @@ using namespace std;
 
 
 
-int pathAlgo(vector<vector<int>>& triangle, int a){
-    vector<int> Array(a,0);
+int ValueandPath(vector<vector<int>>& triangle, int a, vector<vector<int>>& Paths, int k){
     
-    Array = triangle[a];
+    vector<int> C(a,0);
+    for (int i = 0; i < a; i++)
+    {
+        C[i] = triangle[a-1][i];
+    }
     
-    int C = a;
 
     for (int i = a-2; i >= 0; i--)
     {
         for (int j = 0; j <= i; j++)
         {
-            triangle[i][j] = triangle[i][j] + max(triangle[i+1][j],triangle[i+1][j+1]);
+            C[j] = triangle[i][j] + max(C[j],C[j+1]);
+            
         }   
     }
 
-    return triangle[0][0];
+    return C[0];
 }
 
 int main(){
@@ -29,12 +32,14 @@ int main(){
 
     int a;
     cin >> c;
-    // vector<vector<int>> triangle(c, vector<int>(c,0));
     
     vector<int> results;
+    vector<vector<int>> Paths(c);
+
     for (int k = 0; k < c; k++)
     {
         cin >> a;
+        Paths[k].resize(a);
         vector<vector<int>> triangle(a);
         for (int i = 0; i < a; i++) {
             triangle[i].resize(i + 1);
@@ -42,11 +47,15 @@ int main(){
                 cin >> triangle[i][j];
             }
         }
-        results.push_back(pathAlgo(triangle, a));
+        results.push_back(ValueandPath(triangle, a, Paths, k));
+
 
     }
+    
 
     for (int result : results) {
         cout << result << endl;
+
+
     }
 }
