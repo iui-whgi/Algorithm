@@ -1,3 +1,5 @@
+
+
 //? 5.1
 #include <iostream>
 #include <vector>  
@@ -24,18 +26,29 @@ void chainedMatrix(matrix& M,matrix& P,vector<int>& D,int n){
         for (int i = 1; i <= n - gap; i++)
         {
             int j = i + gap;
-            for(int k=i ; k<j;k++){
-                if(M[i][j] > M[i][k] + M[k+1][j] + D[i-1]*D[k]*D[j]){
-                    M[i][j] = M[i][k] + M[k+1][j] + D[i-1]*D[k]*D[j];
-                    P[i][j] = k;
-                }
-            }
+            for(int k=i ; k<j;k++)
+            if(M[i][j] > M[i][k] + M[k+1][j] + D[i-1]*D[k]*D[j]){
+                M[i][j] = M[i][k] + M[k+1][j] + D[i-1]*D[k]*D[j];
+                P[i][j] = k;
+              }
             
         }
 
         
 
-
+        // int j = i - digonal; // M[i][i] 케이스도 포함시킴. 실수할 수 있으니
+        // // 1 부터 시작함. 
+        
+        // int mink = 0;
+        // for (int k = i; k <= j-1 ; k++) // !
+        // {
+        //     int cost = M[i][k] + M[k+1][j] + d[i-1]*d[k]*d[j];
+        //     if (cost < M[i][j]) {
+        //         M[i][j] = cost;
+        //         P[i][j] = k; // Store k for reconstruction
+        //     }
+        // }
+        
     }
 }
     
