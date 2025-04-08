@@ -19,6 +19,7 @@ void chainedMatrix(matrix& M,matrix& P,vector<int>& D,int n){
     }
     
 
+
     for(int gap = 1; gap < n; gap++){
         
         for (int i = 1; i <= n - gap; i++)
