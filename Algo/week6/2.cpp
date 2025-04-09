@@ -47,7 +47,7 @@ void optimalBST(vec1d &P, vec1d &T, vec2d &A, vec2d &R){
 
 void preorder(vec1d &T, vec2d &R, int l, int r)
 {
-  static int cnt = 0;
+  static int cnt = 0; // 정적변수
   if(l > r) return;
   int v = R[l][r];
   cout << T[v]; if(++cnt != n) cout << " ";

@@ -17,8 +17,6 @@ void chainedMatrix(matrix& M,matrix& P,vector<int>& D,int n){
     {
         M[i][i] = P[i][i] =0;
     }
-    
-
 
     for(int gap = 1; gap < n; gap++){
         
@@ -80,7 +78,7 @@ int main(){
     matrix M(n+1, vector<int>(n+1, INF));
     matrix P(n+1, vector<int>(n+1, INF));
 
-    for(int i=0; i<=n;i++){
+    for(int i=1; i<=n;i++){
         cin >> a[i];
     }
     
