@@ -1,107 +1,89 @@
-
-
-//? 5.1
 #include <iostream>
-#include <vector>  
-#include <algorithm>
-#include <string>
-
+#include <vector>
+#define INF 0x7fffffff
 using namespace std;
+typedef struct vector<long long int> vec1d;
+typedef struct vector<vec1d> vec2d;
 
-typedef vector<vector<int>> matrix;
+int n;
 
-#define INF 999999
-
-
-void chainedMatrix(matrix& M,matrix& P,vector<int>& D,int n){
-    
-    for (int i = 0; i <= n; i++)
-    {
-        M[i][i] = P[i][i] =0;
-    }
-    
-
-    for(int gap = 1; gap < n; gap++){
-        
-        for (int i = 1; i <= n - gap; i++)
-        {
-            int j = i + gap;
-            for(int k=i ; k<j;k++)
-            if(M[i][j] > M[i][k] + M[k+1][j] + D[i-1]*D[k]*D[j]){
-                M[i][j] = M[i][k] + M[k+1][j] + D[i-1]*D[k]*D[j];
-                P[i][j] = k;
-              }
-            
-        }
-
-        
-
-        // int j = i - digonal; // M[i][i] 케이스도 포함시킴. 실수할 수 있으니
-        // // 1 부터 시작함. 
-        
-        // int mink = 0;
-        // for (int k = i; k <= j-1 ; k++) // !
-        // {
-        //     int cost = M[i][k] + M[k+1][j] + d[i-1]*d[k]*d[j];
-        //     if (cost < M[i][j]) {
-        //         M[i][j] = cost;
-        //         P[i][j] = k; // Store k for reconstruction
-        //     }
-        // }
-        
-    }
-}
-    
-void printMatrix(matrix& D, int n){
-    for(int i=1; i<=n; i++){
-        for(int j=1; j<=n; j++){
-            if(D[i][j] == INF) continue;
-            cout << D[i][j];
-            if(j == n) cout << "\n";
-            else cout << " ";
-        }
-    }
+void input(vec1d &P, vec1d &T){
+  for (int i = 1; i <= n; i++)
+    cin >> T[i];
+  for (int i = 1; i <= n; i++)
+    cin >> P[i];
 }
 
+void printArr(vec2d &arr){
+  for (int i = 1; i <= n+1; i++){
+    cout << "0";
+    for (int j = i; j <= n; j++){
+      cout << " " << arr[i][j];
+      if (j == n) cout << "\n";
+    }
+  }
+}
 
+void optimalBST(vec1d &P, vec1d &T, vec2d &A, vec2d &R){
 
-void printPath(matrix& P, int s, int e){
-
-  cout << "(";
-  if(s == e) {
-    cout << "A" << s << ")";
-    return;
+  for (int i = 1; i <= n; i++){
+    A[i][i] = P[i];
+    A[i][i - 1] = A[i + 1][i] = 0;
+    R[i][i] = i;
   }
 
-  int k = P[s][e];
-  printPath(P, s, k);
-  printPath(P, k+1, e);
-  cout << ")";
-}
-  
-int main(){
-
-    int n;
-
-    cin >> n;
-
-    vector<int> a(n+1);
-
-    
-
-    matrix M(n+1, vector<int>(n+1, INF));
-    matrix P(n+1, vector<int>(n+1, INF));
-
-    for(int i=0; i<=n;i++){
-        cin >> a[i];
+  for (int gap = 1; gap < n; gap++) {
+    for (int i = 1; i <= n - gap; i++) {
+      int j = i + gap, pSum = 0;
+      for (int k = i; k <= j; k++) pSum += P[k];
+      for (int k = i; k <= j; k++)
+        if (A[i][j] > A[i][k - 1] + A[k + 1][j] + pSum) {
+          A[i][j] = A[i][k - 1] + A[k + 1][j] + pSum;
+          R[i][j] = k;
+        }
     }
-    
-    chainedMatrix(M,P,a,n);
-    
-    printMatrix(M, n);
-    printMatrix(P, n);
+  }
+}
 
-    cout << M[1][n] << endl;
-    printPath(P, 1, n);
+void preorder(vec1d &T, vec2d &R, int l, int r)
+{
+  static int cnt = 0;
+  if(l > r) return;
+  int v = R[l][r];
+  cout << T[v]; if(++cnt != n) cout << " ";
+  preorder(T, R, l, v-1);
+  preorder(T, R, v+1, r);
+}
 
+void inorder(vec1d &T, vec2d &R, int l, int r)
+{
+  static int cnt = 0;
+  if(l > r) return;
+  int v = R[l][r];
+  inorder(T, R, l, v-1);
+  cout << T[v]; if(++cnt != n) cout << " ";
+  inorder(T, R, v+1, r);
+}
+
+int main()
+{
+  cin >> n;
+
+  vec1d P(n + 1, 0);
+  vec1d T(n + 1, 0);
+  vec2d A(n + 2, vec1d(n + 2, INF));
+  vec2d R(n + 2, vec1d(n + 2, 0));
+
+  input(P, T);
+
+  optimalBST(P, T, A, R);
+
+  printArr(A); cout << "\n";
+  printArr(R); cout << "\n";
+  cout << A[1][n] << "\n";
+
+  preorder(T, R, 1, n); cout << "\n";
+  inorder(T, R, 1, n); cout << "\n";
+
+  return 0;
 }
