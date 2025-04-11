@@ -1,47 +1,42 @@
-
 #include <iostream>
 #include <vector>
-#include <algorithm> 
-
 using namespace std;
 
-int BubbleSort(int n, vector<int>& arr) {
-    int count = 0;
-    for (size_t i = 0; i <= n; i++)
-    {
-        for (size_t j = i+1; j<= n; j++)
-            if(arr[i] > arr[j]){
-                swap(arr[i], arr[j]);
-                count++;
-            }
-    }
+int sum = 0;
+
+void exchange_sort(int n, vector<int>& S){
     
-    return count;
+    for(int i = 1; i<=n; i++){
+        for(int j=i+1; j<=n; j++){
+            if(S[i] > S[j]) {
+                sum +=1;
+                swap(S[i], S[j]);
+            }
+        }
+    }
+    cout << S[1];
+    for(int i=2; i<=n; i++){
+        cout << " " <<S[i] ;
+    }
+
 }
 
+int main(){
 
-int main() {
+    int n,x,location;
+    cin >> n;
 
-    int N;
+    vector<int> S(n+1);
 
-    cin >> N;
-
-    int sum = 0;
-
-    vector<int> arr(N);
-    for(int i=0; i<N; i++){
-        cin >> arr[i];
+    for(int i=1; i<=n ;i++){
+        cin >> S[i];
     }
 
-    int count = BubbleSort(N, arr);
+    exchange_sort(n, S);
     
+    cout << endl <<  sum << endl;
 
-    for(int i=0; i<N; i++){
-        cout << arr[i] << " ";
-    }
 
-    cout <<  "\n" << count << endl;
 
     return 0;
-
 }
