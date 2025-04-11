@@ -1,48 +1,104 @@
+
+#include <iostream>
+#include <string>
+#include <algorithm>
+using namespace std;
+
+int lcs(string x, string y) {
+    int m = x.length();
+    int n = y.length();
+
+    if (m == 0 || n == 0) {
+        return 0;
+    }
+
+    if (x[m - 1] == y[n - 1]) {
+        return lcs(x.substr(0, m - 1), y.substr(0, n - 1)) + 1;
+    } else {
+        return max(lcs(x, y.substr(0, n - 1)),
+                   lcs(x.substr(0, m - 1), y));
+    }
+}
+
+
+
+// ? LCS B포함된거거
+
 #include <iostream>
 #include <vector>
 #include <string>
-#define INF 0x7fffffff
+#include <algorithm>
 using namespace std;
-typedef vector<vector<int> > matrix;
 
-void lcs(string &X, string &Y, matrix &DP, matrix &P){
-  for(int i=1; i<X.length(); i++){
-    for(int j=1; j<Y.length(); j++){
-      DP[i][j] = X[i] == Y[j] ? DP[i - 1][j - 1] + 1 : DP[i][j - 1] > DP[i - 1][j] ? DP[i][j - 1] : DP[i - 1][j];
-			P[i][j] = X[i] == Y[j] ? 1 : DP[i][j - 1] > DP[i - 1][j] ? 2 : 3;
+pair<vector<vector<int>>, vector<vector<int>>> lcs(string x, string y) {
+    x = ' ' + x;
+    y = ' ' + y;
+    int m = x.size();
+    int n = y.size();
+
+    vector<vector<int>> c(m, vector<int>(n, 0));
+    vector<vector<int>> b(m, vector<int>(n, 0));
+
+    for (int i = 1; i < m; ++i) {
+        for (int j = 1; j < n; ++j) {
+            if (x[i] == y[j]) {
+                c[i][j] = c[i - 1][j - 1] + 1;
+                b[i][j] = 1;  // 대각선 (↖)
+            } else {
+                if (c[i][j - 1] > c[i - 1][j]) {
+                    c[i][j] = c[i][j - 1];
+                    b[i][j] = 2;  // 왼쪽 (←)
+                } else {
+                    c[i][j] = c[i - 1][j];
+                    b[i][j] = 3;  // 위쪽 (↑)
+                }
+            }
+        }
     }
-  }
+
+    return {c, b};
 }
 
-void printPath(matrix &P, int i, int j, string X){
-  if(i == 0 || j == 0) return;
 
-  if(P[i][j] == 1){
-    printPath(P, i-1, j-1, X);
-    cout << X[i];
-  }
-  else if(P[i][j] == 2){
-    printPath(P, i, j-1, X);
-  }
-  else if(P[i][j] == 3){
-    printPath(P, i-1, j, X);
-  }
-}
 
-int main(){
 
-  string X, Y;
 
-  cin >> X; X.insert(0, " ");
-  cin >> Y; Y.insert(0, " ");
 
-  matrix DP(X.length()+1, vector<int>(Y.length()+1, 0));
-  matrix P(X.length()+1, vector<int>(Y.length()+1, 0));
+pair<vector<vector<int>>, vector<vector<int>>> lcs(string x, string y) {
+    x = ' ' + x;
+    y = ' ' + y;
 
-  lcs(X, Y, DP, P);
+    int m = x.size();
+    int n = y.size();   
 
-  cout << DP[X.length()-1][Y.length()-1] << "\n";
-  printPath(P, X.length()-1, Y.length()-1, X);
+    vector<vector<int>> c(m, vector<int>(n, 0));
+    vector<vector<int>> b(m, vector<int>(n, 0));
 
-  return 0;
+
+    for (int i = 1; i < n; i++){    
+        for (int j = 1; j < n; j++)
+        {
+            if (x[i] == y[i])
+            {
+                c[i][j] = c[i-1][j-1] + 1;
+                b[i][j] = 1;
+            }
+            else{
+                if (c[i][j-1] > c[i-1][j]){
+                    c[i][j] = c[i][j-1];
+                    b[i][j] = 2;
+                }
+                else{
+                    c[i][j] = c[i-1][j];
+                    b[i][j] = 3;
+
+                }
+            }
+            
+        }
+        
+    }   
+
+    
+    return {c, b};
 }

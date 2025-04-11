@@ -3,6 +3,12 @@
         "ostream": "cpp",
         "vector": "cpp",
         "iostream": "cpp",
-        "string": "cpp"
+        "string": "cpp",
+        "xstring": "cpp",
+        "utility": "cpp",
+        "algorithm": "cpp",
+        "iterator": "cpp",
+        "xmemory": "cpp",
+        "xutility": "cpp"
     }
 }
