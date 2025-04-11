@@ -4,11 +4,6 @@
 
 using namespace std;
 
-
-
-
-
-
 int main() {
 
     int N,M;
@@ -25,7 +20,7 @@ int main() {
     {
         cin >> SearchV[i];
     }
-    
+
     
 
     for (int i = 0; i< M ; i++) {
