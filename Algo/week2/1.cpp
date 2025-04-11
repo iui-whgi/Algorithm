@@ -1,5 +1,4 @@
 
-
 #include <bits/stdc++.h>
 using namespace std;
 
@@ -18,3 +17,4 @@ int main() {
     scanf("%lld", &n);
     printf("%lld", fun(n));
 }
+

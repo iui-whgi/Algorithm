@@ -1,3 +1,4 @@
+
 #include <iostream>
 #include <bits/stdc++.h>
 typedef long long long_t;
@@ -37,3 +38,4 @@ int main(){
     collatz(n);
     return 0;
 }
+
