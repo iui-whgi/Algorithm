@@ -40,7 +40,7 @@ Matrix Pow(Matrix A , int k){
         A = Mult(A, A);
         k /= 2;
     }
-    
+
     return result;
 }
 
@@ -71,3 +71,9 @@ int main(){
 
     return 0;
 }
+
+
+
+
+
+

@@ -1,11 +1,11 @@
 #include <iostream>
-#include <unordered_map>
+#include <map>
 using namespace std;
 
-typedef long long ll;
-unordered_map<ll, int> memo;
+typedef long long int;
+map<int, int> memo;
 
-int coll_length(ll n) {
+int coll_length(int n) {
     if (n == 1) return 1;
     if (memo.count(n)) return memo[n];
 
@@ -15,7 +15,7 @@ int coll_length(ll n) {
         return memo[n] = 1 + coll_length(3 * n + 1);
 }
 
-void forprint(ll n) {
+void forprint(int n) {
     while (true) {
         cout << n << ' ';
         if (n == 1) break;
@@ -25,14 +25,15 @@ void forprint(ll n) {
     cout << '\n';
 }
 
+
 int main() {
-    ll n, m;
+    int n, m;
     cin >> n >> m;
 
-    ll start = min(n, m), end = max(n, m);
-    ll maxNum = start, maxLen = 0;
+    int start = min(n, m), end = max(n, m);
+    int maxNum = start, maxLen = 0;
 
-    for (ll i = start; i <= end; i++) {
+    for (int i = start; i <= end; i++) {
         int len = coll_length(i);
         if (len > maxLen) {
             maxLen = len;
@@ -45,3 +46,6 @@ int main() {
 
     return 0;
 }
+
+
+

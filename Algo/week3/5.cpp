@@ -6,7 +6,6 @@ using namespace std;
 typedef vector<vector<int>> Matrix;
 int cnt = 1;
 
-
 int whereis(int m, int srow, int scol, int row, int col){
     int midRow = srow + m;
     int midCol = scol + m;
@@ -21,19 +20,6 @@ int whereis(int m, int srow, int scol, int row, int col){
     }
 }
 
-// int whereis(int m, int srow, int scol, int row, int col) {
-//     int midRow = srow + m;
-//     int midCol = scol + m;
-    
-//     if (row < midRow) {
-//         if (col < midCol) return 1; // Top-left
-//         else return 2;              // Top-right
-//     } else {
-//         if (col < midCol) return 3; // Bottom-left
-//         else return 4;              // Bottom-right
-//     }
-// }
-
 void fill(int where, Matrix& A,int srow, int scol){
     if(where != 1) A[srow][scol] = cnt;
     if(where != 2) A[srow][scol+1] = cnt;
@@ -45,10 +31,8 @@ void fill(int where, Matrix& A,int srow, int scol){
 
 pair<int, int> hole(int subQuadrant, int quadrant, int mid, int srow, int scol, int row, int col) {
     if (subQuadrant == quadrant) {
-        // If this is the quadrant with the original hole, pass it down
         return {row, col};
     } else {
-        // Otherwise, the hole is where we placed our tromino
         if (subQuadrant == 1) return {srow + mid - 1, scol + mid - 1}; // Top-left
         if (subQuadrant == 2) return {srow + mid - 1, scol + mid};     // Top-right
         if (subQuadrant == 3) return {srow + mid, scol + mid - 1};     // Bottom-left
@@ -62,7 +46,6 @@ void tromino(int n, Matrix& A, int srow,int scol, int row, int col){
     int where;
     int hrow, hcol;
     where = whereis(m, srow, scol, row , col );
-    // cout << where << endl;
     if(n==2)
         fill(where, A, srow, scol);
     else{
@@ -79,7 +62,6 @@ void tromino(int n, Matrix& A, int srow,int scol, int row, int col){
         pair<int, int> hole4 = hole(4,where, m , srow, scol, row, col);
         tromino(m, A, srow+m, scol+m, hole4.first, hole4.second);
         
-        
     }
 }
 
@@ -93,25 +75,15 @@ int main(){
 
     tromino(N, A, 0 , 0 ,r, c);
     
-    // for (int i = 0; i < N; i++)
-    // {
-    //     for (int j = 0; j < N; j++)
-    //     {
-    //         cout << A[i][j] << " ";
-    //     }
-    //     cout << endl;
-        
-    // }
+
     for (int i = 0; i < N; i++) {
         cout << (A[i][0] == -1 ? 0 : A[i][0]);
         for (int j = 1; j < N; j++) {
-            cout << " " << (A[i][j] == -1 ? 0 : A[i][j]); // Print 0 for the original hole
+            cout << " " << (A[i][j] == -1 ? 0 : A[i][j]);
         }
         cout << endl;
     }
     
-    return 0;
-
-    
-
+    return 0;    
 }
+

@@ -1,4 +1,5 @@
 
+
 #include <iostream>
 #include <vector>
 using namespace std;
@@ -7,9 +8,7 @@ using namespace std;
 int n;
 vector<int> S;
 int Count = 0;
-// Call with: mergesort2(1, n);
 
-// Algorithm 2.5: Merge 2
 void merge2(int low, int mid, int high) {
     Count++;
     int i = low, j = mid + 1, k = 0;
@@ -19,21 +18,19 @@ void merge2(int low, int mid, int high) {
         U[k++] = (S[i] < S[j]) ? S[i++] : S[j++];
     
     if (i > mid)
-        // move S[j] through S[high] to U[k] through U[high]
         while (j <= high)
             U[k++] = S[j++];
     else // i > mid
-        // move S[i] through S[mid] to U[k] through U[high]
         while (i <= mid)
             U[k++] = S[i++];
     
-    // move U[0] through U[high-low+1] to S[low] through S[high]
-    for (int t = low; t <= high; t++)
-        S[t] = U[t - low];
+    // for (int t = low; t <= high; t++)
+    //     S[t] = U[t - low];
+    for (int t = 0; t <= high-low; t++)
+        S[t+low] = U[t];
 }
 
 
-// Algorithm 2.4: Mergesort 2
 void mergesort2(int low, int high)
 {
     
@@ -65,3 +62,8 @@ int main() {
     return 0;
 
 }
+
+
+
+
+
