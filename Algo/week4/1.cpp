@@ -73,7 +73,6 @@ void strassen(int n, vector2d& A, vector2d& B, vector2d& C){
         makeSubMatrix(m, A, A11, A12, A21, A22);
         makeSubMatrix(m, B, B11, B12, B21, B22);
 
-        //2. make M1 ~ M7 -> you might need add, sub, mul
         vector2d M1(m, vector1d(m,0)); vector2d M2(m, vector1d(m,0)); vector2d M3(m, vector1d(m,0)); vector2d M4(m, vector1d(m,0));
         vector2d M5(m, vector1d(m,0)); vector2d M6(m, vector1d(m,0)); vector2d M7(m, vector1d(m,0)); 
         vector2d t1(m, vector1d(m,0)); vector2d t2(m, vector1d(m,0)); 

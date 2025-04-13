@@ -1,3 +1,8 @@
+
+
+
+
+
 #include <iostream>
 #include <vector>
 #include <string>
@@ -79,6 +84,7 @@ void roundup(LargeInteger &v)
 
     reMove(v);
 }
+
 
 void lsub(LargeInteger &a, LargeInteger &b, LargeInteger &c)
 {
