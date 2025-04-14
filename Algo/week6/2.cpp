@@ -1,3 +1,5 @@
+
+
 #include <iostream>
 #include <vector>
 #define INF 0x7fffffff
@@ -45,6 +47,7 @@ void optimalBST(vec1d &P, vec1d &T, vec2d &A, vec2d &R){
   }
 }
 
+
 void preorder(vec1d &T, vec2d &R, int l, int r)
 {
   static int cnt = 0; // 정적변수
@@ -64,6 +67,7 @@ void inorder(vec1d &T, vec2d &R, int l, int r)
   cout << T[v]; if(++cnt != n) cout << " ";
   inorder(T, R, v+1, r);
 }
+
 
 int main()
 {

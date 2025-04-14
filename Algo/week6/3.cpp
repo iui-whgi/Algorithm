@@ -17,13 +17,13 @@ void lcs(string &X, string &Y, matrix &DP, matrix &P) {
         P[i][j] = 1;
       }
       else{
-        if(DP[i-1][j] > DP[i][j-1]){
-          DP[i][j] = DP[i-1][j];
-          P[i][j] = 3;
-        }
-        else{
+        if(DP[i-1][j] < DP[i][j-1]){
           DP[i][j] = DP[i][j-1];
           P[i][j] = 2;         
+        }
+        else{
+          DP[i][j] = DP[i-1][j];
+          P[i][j] = 3;
         }
       }
       
