@@ -9,7 +9,7 @@ void ValueandPath(vector<vector<int>>& triangle, int a, vector<int>& path, int& 
     for (int i = 0; i < a; i++) {
         dp[a-1][i] = triangle[a-1][i];
     }
-    
+
     for (int i = a-2; i >= 0; i--) {
         for (int j = 0; j <= i; j++) {
             dp[i][j] = triangle[i][j] + max(dp[i+1][j], dp[i+1][j+1]);

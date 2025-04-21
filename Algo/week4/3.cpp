@@ -1,81 +1,57 @@
 #include <iostream>
 #include <vector>
-#include <algorithm>
-#include <string>
+#include <unordered_map>
 
 using namespace std;
+
 const int MOD = 10007;
 
-typedef vector<vector<int>> Matrix;
-
-
-void Mmult(Matrix& A, Matrix& B, Matrix& r){
-    
-    r[0][0] = (A[0][0]*B[0][0] + A[0][1]*B[1][0]) % MOD;
-    r[1][0] = (A[1][0]*B[0][0] + A[1][1]*B[1][0]) % MOD;
-
-}
-// void Mmult(Matrix& A, Matrix& B, Matrix& r){
-    
-//     int x = (A[0][0]*B[0][0] + A[0][1]*B[1][0]) % MOD;
-//     int y = (A[1][0]*B[0][0] + A[1][1]*B[1][0]) % MOD;
-
-//     B[0][0] = x;
-//     B[1][0] = y;
-// }
-// void Mmult(const Matrix& A, const Matrix& B, Matrix& r){
-//     r[0][0] = (A[0][0]*B[0][0] + A[0][1]*B[1][0]) % MOD;
-//     r[0][1] = (A[1][0]*B[0][0] + A[1][1]*B[1][0]) % MOD;
-// }
-
-
-
-
-int fibo(int n){
-    Matrix start(2 , vector<int>(1,0));
-    start[0][0] = 1;
-
-    Matrix A(2 , vector<int>(2,1));
-    Matrix r(2 , vector<int>(1,0));
-    A[1][1] = 0;
-    
-    // for(int i=0;i<2;i++){
-    //     for (int j = 0; j < 2; j++)
-    //     {
-    //         cout << A[i][j] << " ";
-    //     }
-    //     cout << endl;
-        
-    // }
-
-
-    if(n <= 1){
-        return n;
+vector<vector<int>> matrixMultiply(const vector<vector<int>>& a, const vector<vector<int>>& b) {
+    vector<vector<int>> result(2, vector<int>(2, 0));
+    for (int i = 0; i < 2; i++) {
+        for (int j = 0; j < 2; j++) {
+            for (int k = 0; k < 2; k++) {
+                result[i][j] = (result[i][j] + (1LL * a[i][k] * b[k][j]) % MOD) % MOD;
+            }
+        }
     }
-    
-    for(int i=0; i<n; i++){
-        Mmult(A, start, r);
-        start = r;
-    }
-
-    return r[0][0];
-
+    return result;
 }
 
-
-
-int main(){
+vector<vector<int>> matrixPower(vector<vector<int>> matrix, long long n) {
+    vector<vector<int>> result = {{1, 0}, {0, 1}};
     
-    int n;
+    while (n > 0) {
+        if (n % 2 == 1) {
+            result = matrixMultiply(result, matrix);
+        }
+        matrix = matrixMultiply(matrix, matrix);
+        n /= 2;
+    }
+    
+    return result;
+}
+
+int fibonacci(long long n) {
+    if (n == 0) return 0;
+    if (n == 1) return 1;
+    
+    vector<vector<int>> fibMatrix = {{1, 1}, {1, 0}};
+    
+    vector<vector<int>> resultMatrix = matrixPower(fibMatrix, n - 1);
+    
+    return resultMatrix[0][0];
+}
+
+int main() {
+    ios_base::sync_with_stdio(false);
+    cin.tie(nullptr);
+    
+    long long n;
     cin >> n;
-
-    int result = fibo(n);
     
-    cout << result << endl;
+    cout << fibonacci(n) << endl;
+    
     return 0;
-    
-
-
-    
-    
 }
+

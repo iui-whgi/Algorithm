@@ -45,7 +45,7 @@ void Encode(Matrix A, int n){
                 A22[i][j] = A[i+n/2][j+n/2];
             }
         }
-
+        
         Encode(A11, n/2);
         Encode(A12, n/2);
         Encode(A21, n/2);
