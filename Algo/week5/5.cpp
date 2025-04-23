@@ -15,7 +15,7 @@ void ValueandPath(vector<vector<int>>& triangle, int a, vector<int>& path, int& 
             dp[i][j] = triangle[i][j] + max(dp[i+1][j], dp[i+1][j+1]);
         }
     }
-    
+
     maxSum = dp[0][0];
     
     int j = 0;
@@ -68,3 +68,5 @@ int main() {
     
     return 0;
 }
+
+
