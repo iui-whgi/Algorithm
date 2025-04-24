@@ -1,9 +1,14 @@
 
 
+
+
+
 #include <iostream>
 #include <vector>
 #include <string>
 using namespace std;
+
+
 int cnt=0;
 int threshold;
 
@@ -20,6 +25,8 @@ LargeInteger stringToLargeInteger(const string& s) {
     }
     return result;
 }
+
+
 
 void cArry(LargeInteger &v)
 {
@@ -139,11 +146,7 @@ void mul_by_exp(LargeInteger& a, int exp, LargeInteger& c){
     }
 }
 
-
 LargeInteger prod(LargeInteger& a, LargeInteger& b){
-
-    cout<<endl;
-    
 
     cnt++;
     int m = a.size() > b.size() ? a.size() : b.size();
@@ -174,7 +177,6 @@ LargeInteger prod(LargeInteger& a, LargeInteger& b){
 }
 
 
-
 int main()
 {
     string a_str, b_str;
@@ -192,4 +194,3 @@ int main()
     print(r);
     return 0;
 }
-

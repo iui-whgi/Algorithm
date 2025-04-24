@@ -12,14 +12,10 @@ typedef vector<vector<int>> matrix;
 
 
 void chainedMatrix(matrix& M,matrix& P,vector<int>& D,int n){
-    
     for (int i = 0; i <= n; i++)
     {
-        M[i][i] = P[i][i] =0;
-    }
-
+        M[i][i] = P[i][i] =0;}
     for(int gap = 1; gap < n; gap++){
-        
         for (int i = 1; i <= n - gap; i++)
         {
             int j = i + gap;
@@ -30,13 +26,9 @@ void chainedMatrix(matrix& M,matrix& P,vector<int>& D,int n){
                 }
             }
         }
-
-
     }
 }
-
-
-
+    
 void printMatrix(matrix& D, int n){
     for(int i=1; i<=n; i++){
         for(int j=1; j<=n; j++){

@@ -10,7 +10,7 @@ int Cnt = 0;
 void partition(int low, int high, int& pivotpoint)
 {
     int pivotitem = S[low];
-    
+
     int j = low;
     for (int i = low + 1; i <= high; i++)
         if (S[i] < pivotitem) {
@@ -28,7 +28,7 @@ void partition(int low, int high, int& pivotpoint)
 void quicksort(int low, int high)
 {
     int pivotpoint;
-    
+
     if (low < high) {
         partition(low, high, pivotpoint);
         quicksort(low, pivotpoint - 1);
@@ -51,6 +51,6 @@ int main(){
     cout << endl << Cnt << endl;
     
     return 0;
-
-
 }
+
+

@@ -21,11 +21,7 @@ longInteger bin2(int n , int k){
             cout << B[p] << " ";
         }
         cout << endl;
-        
-
         }
-        
-
         
     }
     return B[k];

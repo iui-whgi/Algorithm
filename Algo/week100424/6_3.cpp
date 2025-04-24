@@ -9,7 +9,6 @@ typedef vector<vector<int> > matrix;
 void lcs(string &X, string &Y, matrix &DP, matrix &P) {
   for (int i = 1; i < X.length(); i++)
   {
-
     for (int j = 1; j < Y.length(); j++)
     {
       if(X[i]==Y[j]){
@@ -26,9 +25,6 @@ void lcs(string &X, string &Y, matrix &DP, matrix &P) {
           P[i][j] = 3;
         }
       }
-      
-      
-
     }
   }
 }

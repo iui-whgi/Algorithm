@@ -21,9 +21,9 @@ void printEdges(vec2d &W, vector<edge> &F){
     e = F[i].second;
     cout << s << " " << e << " " << W[s][e];
     if(i != F.size()-1) cout << "\n";
-  }
-}
-
+  }         
+}                  
+                                                        
 void prim(vec2d &W, vector<edge> &F){
 
   // 1. 변수 선언 파트

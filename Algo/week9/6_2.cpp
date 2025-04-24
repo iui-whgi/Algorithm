@@ -11,9 +11,9 @@ int n;
 
 void input(vec1d &P, vec1d &T){
   for (int i = 1; i <= n; i++)
-    cin >> T[i];
+    cin >> T[i]; // ! key값
   for (int i = 1; i <= n; i++)
-    cin >> P[i];
+    cin >> P[i]; // ! percentage 
 }
 
 void printArr(vec2d &arr){
@@ -27,24 +27,28 @@ void printArr(vec2d &arr){
 }
 
 void optimalBST(vec1d &P, vec1d &T, vec2d &A, vec2d &R){
-  for (int i = 1; i <= n; i++){
-    A[i][i] = P[i];
-    A[i][i - 1] = A[i + 1][i] = 0;
-    R[i][i] = i;
-  }
-  for (int gap = 1; gap < n; gap++) {
-    for (int i = 1; i <= n - gap; i++) {
-      int j = i + gap, pSum = 0;
-      for (int k = i; k <= j; k++) pSum += P[k];
-      for (int k = i; k <= j; k++){
-        if (A[i][j] > A[i][k - 1] + A[k + 1][j] + pSum) {
-          A[i][j] = A[i][k - 1] + A[k + 1][j] + pSum;
-          R[i][j] = k;
-        }
-      }
+    
+    for (int i = 1; i <= n; i++)
+    {
+        A[i][i] = P[i];
+        A[i][i - 1] = A[i+1][i] = 0;
+        R[i][i] = i; // ! important 
     }
-  }
-  cout << endl;
+    for (int grap = 1; grap < n; grap++)
+    {
+        int i = grap+1;
+        for (int j = 1+grap; j < n; j++)
+        {
+            /* code */
+        }
+        
+        
+    }
+    
+    
+    
+
+
 }
 
 

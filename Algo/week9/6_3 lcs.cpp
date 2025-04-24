@@ -7,30 +7,35 @@ typedef vector<vector<int> > matrix;
 
 
 void lcs(string &X, string &Y, matrix &DP, matrix &P) {
-  for (int i = 1; i < X.length(); i++)
-  {
-
-    for (int j = 1; j < Y.length(); j++)
+    // ! x방향 for문 먼저 돌리는지 몰랐다. 
+    for (int i = 1; i < X.length(); i++)
     {
-      if(X[i]==Y[j]){
-        DP[i][j] = DP[i-1][j-1] +1;
-        P[i][j] = 1;
-      }
-      else{
-        if(DP[i-1][j] < DP[i][j-1]){
-          DP[i][j] = DP[i][j-1];
-          P[i][j] = 2;         
+        for (int j = 1; j < Y.length(); j++)
+        {
+            if(X[i] == Y[j]){
+                
+                DP[i][j] = DP[i-1][j-1] +1;
+                P[i][j] = 1;
+            }
+            else{
+                if(DP[i-1][j] < DP[i][i-j]){
+                    DP[i][j] = DP[i][j-1];
+                    P[i][j]= 2;
+                }
+                else{
+                    DP[i][j] = DP[i-1][j];
+                    P[i][j] = 3;
+                }
+            }
+
         }
-        else{
-          DP[i][j] = DP[i-1][j];
-          P[i][j] = 3;
-        }
-      }
-      
-      
+        
+        
+
 
     }
-  }
+    
+    
 }
 
 
