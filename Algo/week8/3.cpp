@@ -10,6 +10,7 @@ vector<long long> zeckendorf_decomposition(long long n) {
         fib.push_back(fib[fib.size() - 1] + fib[fib.size() - 2]);
     }
 
+    
     fib.erase(fib.begin());
 
     vector<long long> result;
