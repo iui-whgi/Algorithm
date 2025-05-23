@@ -1,92 +1,114 @@
 #include <iostream>
 #include <vector>
+#include <numeric>
 #include <algorithm>
 using namespace std;
 
-int n, W;
-vector<int> w, p;
-vector<bool> include, bestset;
-int maxProfit = 0;
-vector<int> original_index;  // 정렬 전 인덱스 보관
-vector<int> selection_order; // 선택된 아이템의 정렬 후 인덱스 (선택 순서 보존)
+/* ------------ 전역 변수 ------------ */
+int n, W;                      // 아이템 수, 배낭 용량
+vector<int> w, p;              // 정렬-후 무게·이익 배열
+vector<bool> includeItem, bestset;
+int maxprofit = 0;
 
-void array_copy(const vector<bool>& src, vector<bool>& dest) {
-    dest = src;
+/* ------------ 보조 함수 ------------ */
+void printNode(int level, int weight, int profit,
+               int bound, int currentMax)
+{
+    cout << level << ' ' << weight << ' ' << profit << ' '
+         << bound << ' ' << currentMax << '\n';
 }
 
-float get_bound(int i, int profit, int weight) {
-    if (weight >= W) return 0;
-    float bound = profit;
-    int totweight = weight;
-    int j = i + 1;
-    while (j < n && totweight + w[j] <= W) {
-        totweight += w[j];
+/* fractional-knapsack 기반 bound 계산 */
+int calcBound(int level, int profit, int weight)
+{
+    int bound = profit;
+    int totW  = weight;
+    int j     = level + 1;
+
+    /* 남은 아이템을 가능한 한 통째로 담기 */
+    while (j < n && totW + w[j] <= W)
+    {
+        totW  += w[j];
         bound += p[j];
-        j++;
+        ++j;
     }
-    if (j < n) bound += (W - totweight) * ((float)p[j] / w[j]);
+    /* 마지막 남은 용량을 분할해서 담기 */
+    if (j < n && totW < W)
+        bound += (W - totW) * p[j] / w[j];   // 정수 부분만
+
     return bound;
 }
 
-bool promising(int i, int profit, int weight) {
-    return get_bound(i, profit, weight) > maxProfit;
+/* ------------ 백트래킹(분기 한정) ------------ */
+void knapsack(int level, int profit, int weight, int bound)
+{
+    /* (1) 최적 해 갱신 – 먼저 갱신 후 print 해야 max_profit이 맞음 */
+    if (weight <= W && profit > maxprofit)
+    {
+        maxprofit = profit;
+        bestset   = includeItem;
+    }
+
+    /* (2) 노드 정보 출력 */
+    printNode(level + 1, weight, profit, bound, maxprofit);
+
+    /* (3) 종료 조건 */
+    if (level == n - 1 || bound <= maxprofit) return;
+    if (weight > W)                           return;   // 용량 초과 시 더 이상 자식 X
+
+    /* (4) 왼쪽 자식 : 다음 아이템 **포함** (bound는 그대로 전달) */
+    includeItem[level + 1] = true;
+    knapsack(level + 1,
+             profit + p[level + 1],
+             weight + w[level + 1],
+             bound);
+    includeItem[level + 1] = false;
+
+    /* (5) 오른쪽 자식 : 다음 아이템 **제외** (새 bound 필요) */
+    int newBound = calcBound(level + 1, profit, weight);
+    knapsack(level + 1, profit, weight, newBound);
 }
 
-void knapsack(int i, int profit, int weight) {
-    float bound = get_bound(i, profit, weight);
-    cout << i << " " << weight << " " << profit << " " << (int)bound << " " << maxProfit << endl;
+int main()
+{
+    // freopen("4.txt", "r", stdin);
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
 
-    if (weight <= W && profit > maxProfit) {
-        maxProfit = profit;
-        array_copy(include, bestset);
-        selection_order.clear();
-        for (int j = 0; j < n; j++) {
-            if (include[j]) selection_order.push_back(j);
-        }
-    }
-    if (i == n - 1) return;
+    /* ---- 입력 ---- */
+    if (!(cin >> n >> W)) return 0;
+    vector<int> origW(n), origP(n);
+    for (int i = 0; i < n; ++i) cin >> origW[i];
+    for (int i = 0; i < n; ++i) cin >> origP[i];
 
-    if (promising(i, profit, weight)) {
-        include[i + 1] = true;
-        knapsack(i + 1, profit + p[i + 1], weight + w[i + 1]);
-        include[i + 1] = false;
-        knapsack(i + 1, profit, weight);
-    }
-}
-
-int main() {
-    freopen("3.txt", "r", stdin);
-    cin >> n >> W;
-    w.resize(n);
-    p.resize(n);
-    include.resize(n);
-    bestset.resize(n);
-    original_index.resize(n);
-
-    for (int i = 0; i < n; i++) cin >> w[i];
-    for (int i = 0; i < n; i++) cin >> p[i];
-
-    // 정렬: 단위 무게당 이익 내림차순
+    /* ---- 단위 이익 내림차순 정렬 ---- */
     vector<int> idx(n);
-    for (int i = 0; i < n; i++) idx[i] = i;
-    sort(idx.begin(), idx.end(), [&](int a, int b) {
-        return (float)p[a] / w[a] > (float)p[b] / w[b];
+    iota(idx.begin(), idx.end(), 0);
+    sort(idx.begin(), idx.end(), [&](int a, int b)
+    {
+        return (double)origP[a] / origW[a] >
+               (double)origP[b] / origW[b];
     });
 
-    vector<int> w2(n), p2(n), origin(n);
-    for (int i = 0; i < n; i++) {
-        w2[i] = w[idx[i]];
-        p2[i] = p[idx[i]];
-        origin[i] = idx[i];
+    w.resize(n);  p.resize(n);
+    for (int i = 0; i < n; ++i)
+    {
+        w[i] = origW[idx[i]];
+        p[i] = origP[idx[i]];
     }
-    w = w2; p = p2; original_index = origin;
 
-    include[0] = false;
-    knapsack(0, 0, 0);
+    /* ---- 백트래킹 시작 ---- */
+    includeItem.assign(n, false);
+    bestset.assign(n, false);
 
-    cout << maxProfit << endl;
-    for (int sorted_i : selection_order) {
-        cout << w[sorted_i] << " " << p[sorted_i] << endl;
-    }
+    int initialBound = calcBound(-1, 0, 0);
+    knapsack(-1, 0, 0, initialBound);
+
+    /* ---- 최적 해 출력 ---- */
+    cout << maxprofit << '\n';
+    for (int i = 0; i < n; ++i)
+        if (bestset[i])
+            cout << w[i] << ' ' << p[i] << '\n';
+
     return 0;
 }

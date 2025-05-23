@@ -55,6 +55,8 @@ int count_circuits() {
 }
 
 int main() {
+    freopen("4.txt", "r", stdin);
+
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
     // freopen("4.txt", "r", stdin);
