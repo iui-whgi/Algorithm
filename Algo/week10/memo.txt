@@ -1,0 +1,5 @@
+
+freopen("1.txt", "r", stdin);
+freopen("3.txt", "r", stdin);
+freopen("4.txt", "r", stdin);
+
