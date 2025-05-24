@@ -1,0 +1,8 @@
+
+freopen("1.txt", "r", stdin);
+freopen("2.txt", "r", stdin);
+freopen("3.txt", "r", stdin);
+freopen("4.txt", "r", stdin);
+
+
+일단 3copy.cpp가 제일 유사하게 나옴
