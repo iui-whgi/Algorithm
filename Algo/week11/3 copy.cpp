@@ -1,131 +1,143 @@
+
+
+
 #include <iostream>
 #include <vector>
 #include <queue>
 #include <algorithm>
-#include <limits>
+#include <iomanip>
 using namespace std;
 
 #define INF 0xFFFF
 
+int n, m;
+vector<vector<int>> graph;
+
 struct Node {
     int level;
-    int bound;
     vector<int> path;
+    int bound;
 
-    bool operator<(const Node& other) const {
-        return bound > other.bound; // 최소 우선순위 큐
+    bool operator>(const Node& other) const {
+        return bound > other.bound;
     }
 };
-
-int n, m;
-vector<vector<int>> adj;
-int minlength = INF;
-vector<int> opttour;
-
-// 방문 경로 출력 함수
-void print_node(int level, int bound, const vector<int>& path) {
-    cout << level << " ";
-    if (bound >= INF) cout << "INF ";
-    else cout << bound << " ";
-    for (int city : path)
-        cout << city << " ";
-    cout << '\n';
-}
 
 bool isIn(int city, const vector<int>& path) {
     return find(path.begin(), path.end(), city) != path.end();
 }
 
-int remaining_vertex(const vector<int>& path) {
-    for (int i = 1; i <= n; ++i) {
-        if (!isIn(i, path)) return i;
-    }
-    return -1;
-}
-
-int length(const vector<int>& path) {
-    int total = 0;
+int pathLength(const vector<int>& path) {
+    int len = 0;
     for (int i = 0; i < path.size() - 1; ++i) {
-        int u = path[i];
-        int v = path[i + 1];
-        if (adj[u][v] == INF) return INF;
-        total += adj[u][v];
+        int u = path[i], v = path[i + 1];
+        if (graph[u][v] == INF) return INF;
+        len += graph[u][v];
     }
-    return total;
+    return len;
 }
 
-int bound(Node* u) {
-    int cost = length(u->path);
+int bound(const vector<int>& path) {
+    int last = path.back();
+    vector<bool> visited(n + 1, false);
+    for (int city : path) visited[city] = true;
+
+    int cost = pathLength(path);
+    int min_last = INF;
+
     for (int i = 1; i <= n; ++i) {
-        if (!isIn(i, u->path)) {
-            int minEdge = INF;
+        if (!visited[i]) {
+            int min_edge = INF;
             for (int j = 1; j <= n; ++j) {
-                if (i != j && !isIn(j, u->path) && adj[i][j] < minEdge)
-                    minEdge = adj[i][j];
+                if (i != j && graph[i][j] < min_edge)
+                    min_edge = graph[i][j];
             }
-            cost += minEdge;
+            cost += min_edge;
         }
     }
+
+    // last node -> any unvisited
+    for (int i = 1; i <= n; ++i) {
+        if (!visited[i] && graph[last][i] < min_last)
+            min_last = graph[last][i];
+    }
+
+    if (min_last != INF) cost += min_last;
+
     return cost;
 }
 
-void travel2(vector<int>& opttour, int& minlength) {
-    priority_queue<Node> PQ;
-    Node* v = new Node();
-    v->level = 0;
-    v->path.push_back(1);
-    v->bound = bound(v);
-    print_node(v->level, v->bound, v->path);  // 로그 출력
-    PQ.push(*v);
+void branchAndBoundTSP() {
+    int minlength = INF;
+    vector<int> opttour;
 
-    while (!PQ.empty()) {
-        Node v = PQ.top(); PQ.pop();
-        if (v.bound < minlength) {
-            for (int i = 2; i <= n; ++i) {
-                if (isIn(i, v.path)) continue;
-                Node* u = new Node();
-                u->level = v.level + 1;
-                u->path = v.path;
-                u->path.push_back(i);
-                if (u->level == n - 2) {
-                    u->path.push_back(remaining_vertex(u->path));
-                    u->path.push_back(1);
-                    int len = length(u->path);
-                    print_node(u->level, len, u->path);  // 로그 출력
-                    if (len < minlength) {
-                        minlength = len;
-                        opttour = u->path;
+    priority_queue<Node, vector<Node>, greater<Node>> pq;
+
+    Node root;
+    root.level = 0;
+    root.path.push_back(1);
+    root.bound = bound(root.path);
+    pq.push(root);
+
+    cout << root.level << " " << (root.bound == INF ? "INF" : to_string(root.bound)) << " 1\n";
+
+    while (!pq.empty()) {
+        Node v = pq.top(); pq.pop();
+
+        if (v.bound >= minlength) continue;
+
+        for (int i = 2; i <= n; ++i) {
+            if (isIn(i, v.path)) continue;
+
+            Node u;
+            u.level = v.level + 1;
+            u.path = v.path;
+            u.path.push_back(i);
+
+            if (u.level == n - 2) {
+                // 마지막 노드 추가 + 1로 복귀
+                for (int j = 2; j <= n; ++j) {
+                    if (!isIn(j, u.path)) {
+                        u.path.push_back(j);
+                        break;
                     }
-                } else {
-                    u->bound = bound(u);
-                    print_node(u->level, u->bound, u->path);  // 로그 출력
-                    if (u->bound < minlength)
-                        PQ.push(*u);
                 }
+                u.path.push_back(1);
+                int tour_length = pathLength(u.path);
+                cout << u.level << " " << (tour_length == INF ? "INF" : to_string(tour_length)) << " ";
+                for (int city : u.path) cout << city << " ";
+                cout << "\n";
+                if (tour_length < minlength) {
+                    minlength = tour_length;
+                    opttour = u.path;
+                }
+            } else {
+                u.bound = bound(u.path);
+                cout << u.level << " " << (u.bound == INF ? "INF" : to_string(u.bound)) << " ";
+                for (int city : u.path) cout << city << " ";
+                cout << "\n";
+                if (u.bound < minlength)
+                    pq.push(u);
             }
         }
     }
+
+    cout << (minlength == INF ? "INF" : to_string(minlength)) << "\n";
+    for (int city : opttour) cout << city << " ";
+    cout << "\n";
 }
 
 int main() {
     freopen("3.txt", "r", stdin);
     cin >> n >> m;
-    adj.assign(n + 1, vector<int>(n + 1, INF));
+    graph.assign(n + 1, vector<int>(n + 1, INF));
+
     for (int i = 0; i < m; ++i) {
-        int u, v, w;
-        cin >> u >> v >> w;
-        adj[u][v] = w;
+        int u, v, w; cin >> u >> v >> w;
+        graph[u][v] = w;
     }
 
-    vector<int> path;
-    travel2(path, minlength);
-
-    if (minlength >= INF) cout << "INF\n";
-    else cout << minlength << "\n";
-
-    for (int v : path)
-        cout << v << " ";
-    cout << "\n";
+    branchAndBoundTSP();
 
     return 0;
 }
