@@ -40,7 +40,7 @@ void sum_of_subsets(int i, int weight, int total) {
 
 int main() {
     // Read input
-    // freopen("2.txt", "r", stdin);
+    freopen("2.txt", "r", stdin);
     cin >> n >> W;
     
     // Resize and initialize arrays
