@@ -79,7 +79,7 @@ void printPath(int start, int A, const matrix_t &P) {
 }
 
 int main() {
-    // freopen("2.txt", "r", stdin);
+    freopen("2.txt", "r", stdin);
     cin >> N >> M;
     matrix_t W(N + 1, vector<int>(N + 1, INF));
     matrix_t D(N + 1, vector<int>(1 << (N - 1), INF));
